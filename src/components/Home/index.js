@@ -3,7 +3,7 @@ import Header from "../../assets/img/header.png";
 import Store from "../../assets/img/store.jpg";
 import Section from "./section";
 import CardImage from "../CardImage";
-import { getServices, getGalery, order } from "../../apis";
+import { getServices, getGalery, order, getContact } from "../../apis";
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -21,13 +21,20 @@ const customStyles = {
 const Home = () => {
   const [product, setProduct] = useState([]);
   const [galery, setGalery] = useState([]);
+  const [contact, setContact] = useState({})
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState({nama: "", nomor: ""});
   let id_layanan = useRef(null);
+  const layananRef = useRef(null);
+  const galeryRef = useRef(null);
+  const aboutRef = useRef(null);
 
   useEffect(() => {
     getServices().then((res) => setProduct(res.data.data));
     getGalery().then((res) => setGalery(res.data.data));
+    getContact().then(res => setContact(res.data.data));
+
+    // document.addEventListener('scroll', ({target}) => console.log(window.scrollY))
   }, []);
 
   const openModal = id => {
@@ -51,6 +58,23 @@ const Home = () => {
   }
 
   return (
+    <>
+    <nav style={{height: "60px", width: "100%"}} className="shadow flex flex-row justify-center md:justify-end items-center fixed bg-white">
+      <ul className="flex flex-row">
+          <li className="mx-5 font-medium nav">
+              <p className={"cursor-pointer"} onClick={() => window.scrollTo(0, 0)}>Home</p>
+          </li>
+          <li className="mx-5 font-medium nav" onClick={() => layananRef.current.scrollIntoView()}>
+              <p className="cursor-pointer">Layanan</p>
+          </li>
+          <li className="mx-5 font-medium nav">
+              <p className="cursor-pointer" onClick={() => galeryRef.current.scrollIntoView()}>Galery</p>
+          </li>
+          <li className="mx-5 font-medium nav ">
+              <p className="cursor-pointer" onClick={() => aboutRef.current.scrollIntoView()}>Tentang Kami</p>
+          </li>
+      </ul>
+    </nav>
     <div>
       <div
         style={{
@@ -85,6 +109,12 @@ const Home = () => {
                 Close
                 </button>
                 <button
+                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 rounded mt-10 mr-3"
+                style={{ width: "150px" }} onClick={() => window.location.href = `https://wa.me/${contact.whatsapp}?text=Saya%20ingin%20melakukan%20booking%20pada%20product%20anda`}
+                >
+                Hubungi Langsung
+                </button>
+                <button
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-10"
                 style={{ width: "100px" }}
                 onClick={onOrder}
@@ -111,73 +141,66 @@ const Home = () => {
         </div>
       </div>
 
-      <Section title="Daftar Paket">
-        <div className="flex flex-wrap flex-row">
-          {product.map((val) => (
-            <CardImage
-              className="mx-5 mb-5"
-              img={val.image}
-              title={val.nama}
-              description={val.deskripsi}
-              onClick={() => openModal(val.id)}
-            />
-          ))}
-        </div>
-        <div className="flex flex-row justify-center">
-          <a href="" className="active text-xl">
-            See More
-          </a>
-        </div>
-      </Section>
-
-      <Section title="Galery" style={{ background: "#F1F1F1" }}>
-        <div className="flex flex-wrap flex-row">
-          {galery.map(
-            (val) =>
-              val.image &&
-              val.image !== "" && (
-                <img src={val.image} width={300} className="shadow mx-5 mb-5" />
-              )
-          )}
-        </div>
-      </Section>
-
-      <Section title="Tentang Kami">
-        <div className="flex flex-col md:flex-row">
-          <div style={{ minWidth: "30%" }}>
-            <img src={Store} className="mb-10" />
-            <iframe
-              width="100%"
-              height="300"
-              frameborder="0"
-              scrolling="no"
-              marginheight="0"
-              marginwidth="0"
-              src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-            >
-              <a href="https://www.gps.ie/car-satnav-gps/">sat navs</a>
-            </iframe>
+      <div ref={layananRef}>
+        <Section title="Daftar Paket">
+          <div className="flex flex-row flex-wrap justify-center sm:justify-between">
+            {product.map((val) => (
+              <CardImage
+                className="mb-5"
+                img={val.image}
+                title={val.nama}
+                description={val.deskripsi}
+                onClick={() => openModal(val.id)}
+              />
+            ))}
           </div>
-          <div className="ml-10">
-            Kami adalah salon Profesional yang sudah berdiri dari tahun 1998
-            yang memiliki reputasi tinggi di kota madiun Lorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Vestibulum eleifend, arcu id
-            condimentum cursus, felis ipsum dignissim mauris, et finibus dolor
-            metus in tellus. Sed rhoncus egestas odio at efficitur. Integer
-            ultrices, est et accumsan elementum, erat nunc condimentum tellus,
-            sit amet pharetra orci lectus sed urna. Etiam tincidunt pharetra
-            ullamcorper. Ut egestas maximus sapien, in volutpat est consectetur
-            eget. Curabitur eu lacus in purus cursus porta vitae ut risus.
-            Vestibulum mauris quam, suscipit et augue sit amet, sagittis mollis
-            velit. Sed porta finibus felis, vel aliquam lacus interdum sit amet.
-            Nunc in posuere diam, placerat tristique ligula. Cras lacinia
-            rhoncus magna, quis lobortis sem. Donec egestas ullamcorper quam
-            eget imperdiet. Curabitur non sapien mauris. Fusce non ipsum eget
-            neque dapibus molestie.
+          <div className="flex flex-row justify-center">
+            <a href="" className="active text-xl">
+              See More
+            </a>
           </div>
-        </div>
-      </Section>
+        </Section>
+      </div>
+
+      <div ref={galeryRef}>
+        <Section title="Galery" style={{ background: "#F1F1F1" }}>
+          <div className="flex flex-wrap flex-row justify-center sm:justify-between">
+            {galery.map(
+              (val) =>
+                val.image &&
+                val.image !== "" && (
+                  <img src={val.image} width={300} className="shadow mb-5" />
+                )
+            )}
+          </div>
+        </Section>
+      </div>
+
+      <div ref={aboutRef}>
+        <Section title="Tentang Kami">
+          <div className="flex flex-col md:flex-row">
+            <div style={{ minWidth: "30%" }}>
+              <img src={Store} className="mb-10" />
+              <iframe
+                width="100%"
+                height="300"
+                frameborder="0"
+                scrolling="no"
+                marginheight="0"
+                marginwidth="0"
+                src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+              >
+                <a href="https://www.gps.ie/car-satnav-gps/">sat navs</a>
+              </iframe>
+            </div>
+            <div className="ml-10">
+              {contact.about}
+            </div>
+          </div>
+        </Section>
+      </div>
     </div>
+    </>
   );
 };
 

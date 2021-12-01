@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <div>
-        <Nabvar color="black" />
+        {/* <Nabvar color="black" /> */}
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>

@@ -65,3 +65,8 @@
   -webkit-transform: none;
   transform: none;
 }
+
+
+html {
+  scroll-behavior: smooth;
+}
