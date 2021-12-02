@@ -25,6 +25,7 @@ const Home = () => {
   const [modal, setModal] = useState(false);
   const [info, setInfo] = useState({nama: "", nomor: ""});
   let id_layanan = useRef(null);
+  let nama_layanan = useRef(null);
   const layananRef = useRef(null);
   const galeryRef = useRef(null);
   const aboutRef = useRef(null);
@@ -37,8 +38,9 @@ const Home = () => {
     // document.addEventListener('scroll', ({target}) => console.log(window.scrollY))
   }, []);
 
-  const openModal = id => {
-    id_layanan.current = id;
+  const openModal = value => {
+    id_layanan.current = value.id;
+    nama_layanan.current = value.nama;
     setModal(true);
   }
 
@@ -110,7 +112,7 @@ const Home = () => {
                 </button>
                 <button
                 class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 rounded mt-10 mr-3"
-                style={{ width: "150px" }} onClick={() => window.location.href = `https://wa.me/${contact.whatsapp}?text=Saya%20ingin%20melakukan%20booking%20pada%20product%20anda`}
+                style={{ width: "150px" }} onClick={() => window.location.href = `https://wa.me/${contact.whatsapp}?text=${encodeURI("Saya ingin melakukan Booking product " + nama_layanan.current)}`}
                 >
                 Hubungi Langsung
                 </button>
@@ -135,6 +137,7 @@ const Home = () => {
           <button
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded mt-10"
             style={{ width: "150px" }}
+            onClick={() => layananRef.current.scrollIntoView()}
           >
             Mulai Berbelanja
           </button>
@@ -150,7 +153,7 @@ const Home = () => {
                 img={val.image}
                 title={val.nama}
                 description={val.deskripsi}
-                onClick={() => openModal(val.id)}
+                onClick={() => openModal(val)}
               />
             ))}
           </div>
